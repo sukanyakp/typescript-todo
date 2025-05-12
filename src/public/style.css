@@ -1,0 +1,146 @@
+body {
+    margin: 0;
+    background: #f0f0f0;
+    background-image: url(./2.jpg);
+    background-size: cover;
+    font-family: 'Poppins', sans-serif;
+}
+
+#formDiv {
+    width: 650px;
+    margin: 50px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+#formDiv h1 {
+    text-align: center;
+    font-size: 36px;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+#formDiv form {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#todoText {
+    width: 70%;
+    height: 45px;
+    border: 2px solid #ddd;
+    background: #fff;
+    border-radius: 10px;
+    font-size: 16px;
+    padding: 0 15px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#todoText:focus {
+    outline: none;
+    border-color: #5e7dc6;
+}
+
+#todoAdd {
+    width: 15%;
+    height: 45px;
+    border: none;
+    border-radius: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    background-color: #292935;
+    margin-left: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#todoUl {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#formDiv li {
+    position: relative;
+    background: #fff483;
+    padding: 15px;
+    margin: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s;
+}
+
+#formDiv li:hover {
+    transform: rotate(-3deg);
+}
+
+.sticky-note {
+    background: #fdfd96;
+    border: 2px solid #f7f26c;
+}
+
+.no-task {
+    background-color: transparent;
+    text-align: center;
+    font-size: 20px;
+    color: #999;
+}
+
+.task-done {
+    text-decoration: line-through;
+    background-color: #c1e1c1;
+}
+
+.delete-botton, .edit-botton, .done-botton {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    background-color: #dc3545;
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.edit-botton {
+    background-color: #ebd316;
+}
+
+.done-botton {
+    background-color: #28a745;
+}
+
+.sticky-note .fa-trash, .sticky-note .fa-pencil, .sticky-note .fa-check, .sticky-note .fa-repeat {
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.sticky-note button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.sticky-note .done-botton {
+    right: 50px;
+}
+
+.sticky-note .edit-botton {
+    right: 90px;
+}

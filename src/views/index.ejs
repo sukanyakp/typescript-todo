@@ -1,0 +1,268 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ToDo</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    background-image: url(/image2.jpg);
+    background-size: cover;         
+    background-position: center;     
+    background-attachment: fixed;   
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;                  
+}
+
+/* Container */
+#formDiv {
+    width: 400px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Heading */
+#formDiv h1 {
+    text-align: center;
+    color: #333333;
+    font-size: 24px;
+}
+
+/* Form */
+#addTodoForm {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+#todoText {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#todoAdd {
+    width: 15%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#todoAdd:hover {
+    background-color: #0056b3;
+}
+
+/* Task List */
+#todoUl {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* No Task */
+.no-task {
+    text-align: center;
+    color: #888888;
+    font-style: italic;
+}
+
+/* Task Item */
+.sticky-note {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffe0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.task-done {
+    background-color: #d4edda;
+    text-decoration: line-through;
+}
+
+/* Task Title */
+.sticky-note span {
+    flex-grow: 1;
+    font-size: 18px;
+    color: #333333;
+}
+
+/* Buttons */
+.sticky-note button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+.sticky-note .delete-botton {
+    color: #dc3545;
+}
+
+.sticky-note .edit-botton {
+    color: #ffc107;
+}
+
+.sticky-note .done-botton {
+    color: #28a745;
+}
+
+.sticky-note button:hover {
+    opacity: 0.8;
+}
+
+/* Icons */
+.sticky-note i {
+    font-size: 18px;
+}
+
+/* Input while editing */
+#edit-input {
+    width: 80%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+  </style>
+</head>
+
+<body>
+    <div id="formDiv">
+        <h1>TO DO</h1>
+        <form id="addTodoForm" action="#">
+            <input type="text" name="title" id="todoText" placeholder="Add your tasks..">
+            <input type="submit" name="submit" id="todoAdd" value="+">
+        </form>
+        <ul id="todoUl">
+            <% if(tasks.length == 0){ %>
+                <li class="no-task">No tasks yet</li>
+            <% } %>
+            <% tasks.slice().reverse().forEach((task) => { %>
+            <li class="sticky-note <%= task.status == 'done' ? 'task-done' : '' %>">
+                <span id="task-title-<%= task.id %>"><%= task.title %></span>
+                <button class="delete-botton" id="delete-btn" data-task-id="<%= task.id %>">
+                    <i id="delete-btn" data-task-id="<%= task.id %>" class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+                <% if(task.status == 'pending'){ %>
+                <button class="edit-botton" data-task-id="<%= task.id %>" id="edit-btn">
+                    <i class="fa fa-pencil" aria-hidden="true" data-task-id="<%= task.id %>" id="edit-btn"></i>
+                </button>
+                <% } %>
+                <button class="done-botton" data-task-id="<%= task.id %>" id="done-btn">
+                    <i data-task-id="<%= task.id %>" id="done-btn" class="fa fa-<%= task.status == 'done' ? 'repeat' : 'check' %>" aria-hidden="true"></i>
+                </button>
+            </li>
+            <% }) %>
+        </ul>
+    </div>
+    <script type="text/javascript"></script>
+    <!-- <script src="/scripts.js"></script> -->
+
+    <script>
+
+let addForm = document.getElementById('addTodoForm') 
+
+addForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    let input = document.getElementById('todoText') 
+    if(input.value.trim()){
+        const response = await fetch('add-task', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({title: input.value.trim()})
+        })
+
+        if(response.ok){
+            location.reload();
+            addForm.reset()
+        }
+    }
+});
+
+let taskList = document.getElementById('todoUl') 
+
+taskList.addEventListener('click', async (event) => {
+    let target = event.target 
+    if(target.id == 'delete-btn'){
+        let taskId = target.getAttribute('data-task-id');
+        const response = await fetch('delete-task', {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id: taskId})
+        });
+
+        if(response.ok){
+            location.reload();
+        }
+    }else if(target.id == 'done-btn'){
+        let taskId = target.getAttribute('data-task-id');
+
+        const response = await fetch('complete-task', {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id: taskId})
+        });
+
+        if(response.ok){
+            location.reload();
+        }
+    }else if(target.id == 'edit-btn'){
+        let id = target.getAttribute('data-task-id');
+        let spanElement = document.getElementById(`task-title-${id}`) 
+        const inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.value = spanElement.innerText;
+        inputElement.id = 'edit-input';
+        spanElement.replaceWith(inputElement);
+        inputElement.focus();
+        target.classList.replace('fa-pencil', 'fa-floppy-o');
+        target.setAttribute('id', `save-btn`);
+    }else if(target.id == 'save-btn'){
+        let id = target.getAttribute('data-task-id');
+        let title = document.getElementById('edit-input') 
+        const response = await fetch('edit-task', {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id: id, title: title.value})
+        })
+        if(response.ok){
+            location.reload();
+        }
+    }
+})
+    </script>
+</body>
+
+</html>
